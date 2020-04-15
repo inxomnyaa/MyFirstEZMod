@@ -1,7 +1,7 @@
 ﻿cmake_minimum_required (VERSION 3.8)
 
 # Change to your mod name
-project ("WBDLSample")
+project ("MyFirstEZMod")
 
 set (CMAKE_CXX_STANDARD 17)
 set (CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -66,4 +66,4 @@ function (def_mod name)
 endfunction ()
 
 # Change the name or append more
-add_subdirectory (SampleMod)
+add_subdirectory (MyFirstEZMod)
