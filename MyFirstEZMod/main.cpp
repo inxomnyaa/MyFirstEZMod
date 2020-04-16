@@ -2,6 +2,14 @@
 #include <log.h>
 #include "settings.h"
 #include "playerdb.h"
+#include <command.h>
+#include <Command/Command.h>
+#include <Command/CommandRegistry.h>
+#include <Command/CommandPermissionLevel.h>
+#include <Command/CommandFlag.h>
+#include <Command/CommandParameterData.h>
+#include <Command/CommandOutput.h>
+#include <Command/CommandOrigin.h>
 
 DEF_LOGGER("MyFirstEZMod");
 DEFAULT_SETTINGS(settings);
@@ -23,4 +31,21 @@ void PreInit() {
   Mod::PlayerDatabase::GetInstance().AddListener(
       SIG("left"), [](Mod::PlayerEntry const &entry) { LOGV("left name: %s, xuid: %d") % entry.name % entry.xuid; });
 }
-void PostInit() { LOGV("post init"); }
+void PostInit() {
+  LOGV("post init");
+  Mod::CommandSupport::GetInstance().AddListener(SIG("loaded"), &HelloWorldCommand::setup);
+}
+class HelloWorldCommand : public Command {
+public:
+  HelloWorldCommand() {}
+
+  void execute(CommandOrigin const &origin, CommandOutput &output) {
+    output.success("Hello world!");
+  }
+  static void setup(CommandRegistry *registry) {
+    registry->registerCommand(
+        "helloworld", "My first command", CommandPermissionLevel::Normal, CommandFlagCheat,
+        CommandFlagNone);
+    registry->registerOverload<HelloWorldCommand>("helloworld");
+  }
+};
